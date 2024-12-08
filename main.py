@@ -26,9 +26,24 @@ if __name__ == "__main__":
         sys.exit()
     img = rescale_image(img, scale_percent=40)
    
-   
-    cv2.imshow("Parkplatz", img)
-    cv2.setMouseCallback("Parkplatz", paint_parkinglot, param=img)
-    
-    cv2.waitKey(0)
-   
+
+    current_img = img.copy()
+
+    while True:
+        
+        punkte.clear()
+        temp_img = current_img.copy()
+        
+        cv2.imshow("Parkplatz", temp_img)
+        cv2.setMouseCallback("Parkplatz", paint_parkinglot, param=temp_img)
+
+        key = cv2.waitKey(0) & 0xFF
+        if key == ord('q'):
+            break
+
+        if len(punkte) == 4:
+            zuschneiden(temp_img)
+
+        current_img = temp_img
+
+    cv2.destroyAllWindows()
