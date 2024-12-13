@@ -1,49 +1,58 @@
-import sys
 import cv2
-import numpy as np
-import math
-from src.display_images import ImagePlotter
-from src.parking_fields import *
-
-
-def rescale_image(img, scale_percent):
-    # Calculate new dimensions
-    width = int(img.shape[1] * scale_percent / 100)
-    height = int(img.shape[0] * scale_percent / 100)
-    dimensions = (width, height)
-    return cv2.resize(img, dimensions, interpolation=cv2.INTER_AREA)
+from src.util import get_parking_lines, availability
 
 
 if __name__ == "__main__":
-    ip = ImagePlotter()
-    filename = R"images/parkingLot.jpeg"
-
+    
     # Load image
-    try:
-        img = cv2.imread(filename, cv2.IMREAD_COLOR)
-    except:
-        print("Error: Could not read image file", filename)
-        sys.exit()
-    img = rescale_image(img, scale_percent=40)
-   
 
-    current_img = img.copy()
-
-    while True:
+    #
+    
+    mask = "./images/mask.png"
+    video_path = "./images/parking_video.mp4"
+    
+    mask = cv2.imread(mask, 0)
+    
+    video = cv2.VideoCapture(video_path)
+    ##video = rescale_video(video, scale_percent=80)
+    
+    connected_lines = cv2.connectedComponentsWithStats(mask, 4, cv2.CV_32S)
+    
+    parking_lots = get_parking_lines(connected_lines)
+    
+    status = [None for j in parking_lots]
+    
+    #print(parking_lots[0])
+    frame_number = 0
+    at_frame = 50
+    ret = True
+    while ret:
+        ret,frame = video.read()
         
-        punkte.clear()
-        temp_img = current_img.copy()
-        
-        cv2.imshow("Parkplatz", temp_img)
-        cv2.setMouseCallback("Parkplatz", paint_parkinglot, param=temp_img)
+        if frame_number % at_frame == 0:
+            for parking_lot_index, parking_lot in enumerate(parking_lots):
+                x1, y1, w, h, = parking_lot
 
-        key = cv2.waitKey(0) & 0xFF
-        if key == ord('q'):
+                parking_lot_check = frame[y1:y1 + h, x1:x1 + w, :]
+
+                parking_status = availability(parking_lot_check)
+                
+                status[parking_lot_index] = parking_status
+        
+        for parking_lot_index, parking_lot in enumerate(parking_lots):
+            parking_status = status[parking_lot_index]
+            x1, y1, w, h, = parking_lots[parking_lot_index]
+            
+            if parking_status:
+                frame = cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), (0, 0, 255), 2)
+            else:
+                frame = cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), (0, 255, 0), 2)
+        
+        cv2.imshow('frame',frame)
+        if cv2.waitKey(25) & 0xFF == ord('q'):
             break
-
-        if len(punkte) == 4:
-            zuschneiden(temp_img)
-
-        current_img = temp_img
-
+        
+        frame_number = frame_number + 1
+    
+    video.release
     cv2.destroyAllWindows()
