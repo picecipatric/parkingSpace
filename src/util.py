@@ -5,18 +5,19 @@ import cv2
 
 i = 0
 
-def availability(space, i=0 ):
+def availability(space,videoDilate):
     #status = True -> Parkplatz frei
     #status = False -> Parkplatz besetzt
     
-    i = 0
+    x1, y1, w, h = space
     
-    if i == 0:
-        i = 1
-        status = True
-    else:
-        i = 0
+    space_checked = videoDilate[y1:y1 + h, x1:x1 + w]
+    count = cv2.countNonZero(space_checked)
+    
+    if count > 450:
         status = False
+    else:
+        status = True
         
     return status
 
