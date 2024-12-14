@@ -1,5 +1,5 @@
-import pickle
-from skimage.transform import resize
+# import pickle
+# from skimage.transform import resize
 import numpy as np
 import cv2
 

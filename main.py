@@ -5,12 +5,12 @@ from src.util import get_parking_lines, availability
 
 if __name__ == "__main__":
     
-    # Load image
-
-    #
+    # Load image and video
+    mask = "./masks/mask_parking_space_1920_1080.png"
+    video_path = "./videos/parking_space_1920_1080.mp4"
     
-    mask = "./images/mask.png"
-    video_path = "./images/parking_video.mp4"
+    # mask = "./masks/mask_parking_crop.png"
+    # video_path = "./videos/parking_crop.mp4"
     
     mask = cv2.imread(mask, 0)
     
@@ -29,6 +29,8 @@ if __name__ == "__main__":
     ret = True
     while ret:
         ret,frame = video.read()
+        if not ret:
+            break
         videogray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         videoblur = cv2.GaussianBlur(videogray, (3, 3),1)
         videothresh = cv2.adaptiveThreshold(
