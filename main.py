@@ -12,7 +12,7 @@ from src.image_util import rescale_image, dilate_frame
 
 MIN_COUNT_DICT = {
     "DEFAULT" : 500,
-    "mask_parking_crop" : 1000,
+    "mask_parking_crop" : 1200,
     "mask_parking_space_1920_1080" : 450
 }
 RESIZE_SCALE = {
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     
     frame_number = 0
     papap = 1
-    at_frame = 50
+    at_frame = 30
     ret = True
     while ret:
         ret,frame = video.read()
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
         cv2.imshow('dilated', rescale_image(frame_dilated,
                                             RESIZE_SCALE[mask_name]))
-        cv2.imshow('frame', rescale_image(frame,
+        cv2.imshow('frame (orange: overdue)', rescale_image(frame,
                                           RESIZE_SCALE[mask_name]))
         
         if cv2.waitKey(25) & 0xFF == ord('q'):
@@ -69,6 +69,8 @@ if __name__ == "__main__":
         
         frame_number = frame_number + 1
     
+    print(f"\n\n")
+    print("Current parked duration in seconds: ")
     for spot in parking_spots:
         print(spot.lable_id, 
               spot.time.time_delta)

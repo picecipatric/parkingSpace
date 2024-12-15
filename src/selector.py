@@ -5,7 +5,7 @@ class Selector:
     def __init__(self):
         self.folder_masks = "masks"
         self.folder_videos = "videos"
-        self.duration_parking = 10.
+        self.duration_parking = 15.
         self.is_duration_limited = 0>self.duration_parking
         
     def select_video(self)->list[str, str]:
@@ -51,17 +51,20 @@ class Selector:
     def select_duration_parking(self)->list:
         print()
         print(f"Select the allowed duration of parking")
-        print(f"\tNOTE: If value is below 0 => free parking")
-        duration = input("Enter duration in [sec]:")
+        print(f"\tNOTE: If value is below 0 -> free parking!")
+        duration = input("Enter duration in [sec]: ")
         try:
             duration = float(duration)
+            self.duration_parking = duration
         except:
             print("ERROR: invalid input...")
-        if duration < 0:
+        print()
+        if self.duration_parking < 0:
             self.is_duration_limited = False
-        if duration >= 0:
+            print(f"Mode: Free parking")
+        if self.duration_parking >= 0:
             self.is_duration_limited = True
-        self.duration_parking = duration
+            print(f"Mode: Limited parking ({self.duration_parking} sec)")
         return [self.is_duration_limited, self.duration_parking]
         
     def _get_searchterms(self):

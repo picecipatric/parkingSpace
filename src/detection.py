@@ -1,8 +1,6 @@
 import cv2
-import numpy as np
 
 from src.parking_spot_parameters import ParkingSpot
-
 
 def detection(spot:ParkingSpot, frame_dilated, min_count:int=500)->ParkingSpot: 
     x1 = spot.geo.coord_x
