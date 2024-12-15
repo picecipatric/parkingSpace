@@ -16,6 +16,7 @@ def dilate_frame(frame:np.ndarray):
     frame_dilate = cv2.dilate(frame_median, kernel, iterations=1)
     return frame_dilate
 
+
 def detection(spot:ParkingSpot, frame_dilated, min_count:int=450)->ParkingSpot: 
     x1 = spot.geo.coord_x
     y1 = spot.geo.coord_y

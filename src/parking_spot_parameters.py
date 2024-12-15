@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from numpy import ndarray
 import cv2
 
-from time_measurement import ParkingTime
+from src.time_measurement import ParkingTime
 from src.util import get_parking_lines
 
 
@@ -37,8 +37,8 @@ class ParkingGeometry:
         self.coord_y = coord_y
         self.width = width
         self.height = height
-        self.origin_text:tuple[int, int]= (int(self.coord_x+self.width/2), 
-                                           int(self.coord_y+self.height/2))
+        self.origin_text:tuple[int, int]= (int(self.coord_x+5), 
+                                           int(self.coord_y+self.height-5))
 
         
 def setup_parking_spots(mask_image:ndarray)->list[ParkingSpot]:
