@@ -1,29 +1,42 @@
 import cv2
-import numpy as np
-# import sys
-# import os
 
-# sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+
+import src.detection as det
 from src.selector import Selector
 from src.file_opener import FileOpener as fo
-from src.util import get_parking_lines, availability
+from src.file_finder import get_filename_notype
+from src.parking_spot_parameters import setup_parking_spots
+import src.drawer_parking_spot as draw
+from src.image_util import rescale_image, dilate_frame
+
+
+MIN_COUNT_DICT = {
+    "DEFAULT" : 500,
+    "mask_parking_crop" : 1000,
+    "mask_parking_space_1920_1080" : 450
+}
+RESIZE_SCALE = {
+    "DEFAULT" : 100,
+    "mask_parking_crop" : 100,
+    "mask_parking_space_1920_1080" : 50
+}
 
 
 if __name__ == "__main__":
     
-    # Load image and video
-    select = Selector()
-    mask_path, video_path = select.select_video()
+    # select
+    sel = Selector()
+    mask_path, video_path = sel.select_video()
+    is_duration_limited, duration_parking = sel.select_duration_parking()
     
+    # Load image and video
+    mask_name = get_filename_notype(mask_path)
     mask = fo.open_as_mask(mask_path)
     video = fo.open_as_video(video_path)
-    # video = rescale_video(video, scale_percent=80)
+    if not mask_name in MIN_COUNT_DICT.keys():
+        mask_name = "DEFAULT"
     
-    connected_lines = cv2.connectedComponentsWithStats(mask, 4, cv2.CV_32S)
-    
-    parking_lots = get_parking_lines(connected_lines)
-    
-    status = [None for j in parking_lots]
+    parking_spots = setup_parking_spots(mask_image=mask)
     
     frame_number = 0
     papap = 1
@@ -33,42 +46,32 @@ if __name__ == "__main__":
         ret,frame = video.read()
         if not ret:
             break
-        videogray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        videoblur = cv2.GaussianBlur(videogray, (3, 3),1)
-        videothresh = cv2.adaptiveThreshold(
-            videoblur, 255,
-            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-            cv2.THRESH_BINARY_INV, 25, 16)
-        
-        videoMedian = cv2.medianBlur(videothresh, 5)
-        
-        kernel = np.ones((3,3), np.uint8)
-        videoDilate = cv2.dilate(videoMedian,kernel, iterations=1)
-        
+        frame_dilated = dilate_frame(frame)
         
         if frame_number % at_frame == 0:
-            for parking_lot_index, parking_lot in enumerate(parking_lots):
-                x1, y1, w, h = parking_lot
-                
-                parking_status = availability(parking_lot,videoDilate)
-                
-                status[parking_lot_index] = parking_status
+            for spot in parking_spots:
+                det.detection(spot, frame_dilated, 
+                              min_count=MIN_COUNT_DICT[mask_name])
         
-        for parking_lot_index, parking_lot in enumerate(parking_lots):
-            parking_status = status[parking_lot_index]
-            x1, y1, w, h, = parking_lots[parking_lot_index]
+        for spot in parking_spots:
+            if is_duration_limited and spot.time.time_delta > duration_parking:
+                draw.draw_overdue(spot, frame)
+            draw.draw_parking_field(spot, frame)
             
-            
-            if parking_status:
-                frame = cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), (0, 255, 0), 2)
-            else:
-                frame = cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), (0, 0, 255), 2)
+
+        cv2.imshow('dilated', rescale_image(frame_dilated,
+                                            RESIZE_SCALE[mask_name]))
+        cv2.imshow('frame', rescale_image(frame,
+                                          RESIZE_SCALE[mask_name]))
         
-        cv2.imshow('frame',frame)
         if cv2.waitKey(25) & 0xFF == ord('q'):
             break
         
         frame_number = frame_number + 1
+    
+    for spot in parking_spots:
+        print(spot.lable_id, 
+              spot.time.time_delta)
     
     video.release()
     cv2.destroyAllWindows()

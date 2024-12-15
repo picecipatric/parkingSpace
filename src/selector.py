@@ -1,10 +1,12 @@
-from src.file_finder import FileFinder
+from src.file_finder import FileFinder, get_filename_notype
 
 
 class Selector: 
     def __init__(self):
         self.folder_masks = "masks"
         self.folder_videos = "videos"
+        self.duration_parking = 10.
+        self.is_duration_limited = 0>self.duration_parking
         
     def select_video(self)->list[str, str]:
         """
@@ -29,7 +31,7 @@ class Selector:
        
         print(f"Select one of the following videos with a number:")
         for i, video in enumerate(paths_videos):
-            name = FileFinder.get_filename_notype(video)
+            name = get_filename_notype(video)
             print(f"\t{i}.) {name}")
         selected_id = input("Enter video number: ")
         try: 
@@ -45,14 +47,29 @@ class Selector:
         mask_path = self._find_matching_mask(selected_id, searchterms)
         video_path = paths_videos[selected_id]
         return [mask_path, video_path]
-        
+    
+    def select_duration_parking(self)->list:
+        print()
+        print(f"Select the allowed duration of parking")
+        print(f"\tNOTE: If value is below 0 => free parking")
+        duration = input("Enter duration in [sec]:")
+        try:
+            duration = float(duration)
+        except:
+            print("ERROR: invalid input...")
+        if duration < 0:
+            self.is_duration_limited = False
+        if duration >= 0:
+            self.is_duration_limited = True
+        self.duration_parking = duration
+        return [self.is_duration_limited, self.duration_parking]
         
     def _get_searchterms(self):
         paths_masks = FileFinder.search_images_in_folder(self.folder_masks)
         search_terms = []
         remove_string = "mask_"
         for path in paths_masks:
-            name = FileFinder.get_filename_notype(path)
+            name = get_filename_notype(path)
             search_terms.append(name.replace(remove_string,""))
         return search_terms
     
