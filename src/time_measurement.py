@@ -4,7 +4,7 @@ import time
 
 class ParkingTime:
     def __init__(self):
-        self.time_current_parked_delta = 0.0
+        self.time_delta = 0.0
         self.datetimes_parked_started = []
         self.datetimes_parked_ended = []
         self.is_parked = False
@@ -25,7 +25,7 @@ class ParkingTime:
     
     def get_current_parked_time(self):
         self._update_vehicle_parked()
-        return self.time_current_parked_delta
+        return self.time_delta
     
     
     def get_datetimes_parked_started(self):
@@ -40,7 +40,7 @@ class ParkingTime:
         self.datetimes_parked_ended.append(time.time())
         delta_time = self.datetimes_parked_started[-1] - self.datetimes_parked_ended[-1]
         # self.times_parked_delta.append(delta_time)
-        self.time_current_parked_delta = 0.0
+        self.time_delta = 0.0
         self.is_parked = False
         
     def _update_vehicle_arrived(self):
@@ -50,7 +50,7 @@ class ParkingTime:
     def _update_vehicle_parked(self):
         if not self.is_parked:
             return
-        self.time_current_parked_delta = time.time() - self.datetimes_parked_started[-1]
+        self.time_delta = time.time() - self.datetimes_parked_started[-1]
 
 if __name__ == "__main__":
     spots_time = 3*[None]

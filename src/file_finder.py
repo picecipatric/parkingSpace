@@ -48,7 +48,8 @@ class FileFinder:
     
 
 if __name__ == "__main__":
-    file = R"F:\.DEV\_Programming\_GitHub\BIDV2_ParkingSpaceDetection\parkingSpace\tests\test_videostream.py"
+    file = R"src\file_finder.py"
     name = get_filename_notype(file)
-    list_files = mf.search_files_in_folder("src", "")
+    print(name)
+    list_files = FileFinder.search_files_in_folder("src", "")
     print(list_files)

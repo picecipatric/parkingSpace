@@ -5,6 +5,8 @@ class Selector:
     def __init__(self):
         self.folder_masks = "masks"
         self.folder_videos = "videos"
+        self.duration_parking = 10.
+        self.is_duration_limited = 0>self.duration_parking
         
     def select_video(self)->list[str, str]:
         """
@@ -45,7 +47,22 @@ class Selector:
         mask_path = self._find_matching_mask(selected_id, searchterms)
         video_path = paths_videos[selected_id]
         return [mask_path, video_path]
-        
+    
+    def select_duration_parking(self)->list:
+        print()
+        print(f"Select the allowed duration of parking")
+        print(f"\tNOTE: If value is below 0 => free parking")
+        duration = input("Enter duration in [sec]:")
+        try:
+            duration = float(duration)
+        except:
+            print("ERROR: invalid input...")
+        if duration < 0:
+            self.is_duration_limited = False
+        if duration >= 0:
+            self.is_duration_limited = True
+        self.duration_parking = duration
+        return [self.is_duration_limited, self.duration_parking]
         
     def _get_searchterms(self):
         paths_masks = FileFinder.search_images_in_folder(self.folder_masks)

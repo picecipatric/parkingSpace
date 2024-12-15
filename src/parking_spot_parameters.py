@@ -47,7 +47,7 @@ def setup_parking_spots(mask_image:ndarray)->list[ParkingSpot]:
     parking_spots = []
     for i, spot_geo in enumerate(parking_spots_geometric):
         x1, y1, w, h = spot_geo
-        spot = ParkingSpot(lable_id=i,
+        spot = ParkingSpot(lable_id=i+1,
                            coord_x=x1,
                            coord_y=y1,
                            width=w,
