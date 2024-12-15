@@ -5,7 +5,7 @@ import src.detection as det
 from src.selector import Selector
 from src.file_opener import FileOpener as fo
 from src.file_finder import get_filename_notype
-from src.parking_spot_parameters import setup_parking_spots
+from parameters_parking_spot import setup_parking_spots
 import src.drawer_parking_spot as draw
 from src.image_util import rescale_image, dilate_frame
 
@@ -22,25 +22,26 @@ RESIZE_SCALE = {
 }
 
 
-if __name__ == "__main__":
-    
+def main():
     # select
     sel = Selector()
     mask_path, video_path = sel.select_video()
     is_duration_limited, duration_parking = sel.select_duration_parking()
     
     # Load image and video
-    mask_name = get_filename_notype(mask_path)
     mask = fo.open_as_mask(mask_path)
     video = fo.open_as_video(video_path)
+    
+    # Setup parking pots and detection
+    parking_spots = setup_parking_spots(mask_image=mask)
+    
+    mask_name = get_filename_notype(mask_path)
     if not mask_name in MIN_COUNT_DICT.keys():
         mask_name = "DEFAULT"
     
-    parking_spots = setup_parking_spots(mask_image=mask)
     
     frame_number = 0
-    papap = 1
-    at_frame = 30
+    at_frame = 30 
     ret = True
     while ret:
         ret,frame = video.read()
@@ -77,3 +78,6 @@ if __name__ == "__main__":
     
     video.release()
     cv2.destroyAllWindows()
+    
+if __name__ == "__main__":
+    main()

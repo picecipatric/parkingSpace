@@ -2,7 +2,16 @@ import cv2
 import numpy as np
 
 
-def dilate_frame(frame:np.ndarray):
+def dilate_frame(frame:np.ndarray)->np.ndarray:
+    """
+    Dilates and returns frame.
+
+    Args:
+        frame (np.ndarray): frame as image
+
+    Returns:
+        np.ndarray: dilated frame as image
+    """
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     frame_blur = cv2.GaussianBlur(frame_gray, (3, 3),1)
     frame_thresh = cv2.adaptiveThreshold(frame_blur, 
@@ -16,7 +25,17 @@ def dilate_frame(frame:np.ndarray):
     return frame_dilate
 
     
-def rescale_image(img:np.ndarray, scale_percent:int=100):
+def rescale_image(img:np.ndarray, scale_percent:int=100)->np.ndarray:
+    """
+    Rescales input image
+
+    Args:
+        img (np.ndarray): _description_
+        scale_percent (int, optional): Scale of image in percetage. Defaults to 100 %.
+
+    Returns:
+        np.ndarray: rescaled image
+    """
     # Calculate new dimensions
     width = int(img.shape[1] * scale_percent / 100)
     height = int(img.shape[0] * scale_percent / 100)
