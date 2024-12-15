@@ -1,5 +1,4 @@
-
-from file_finder import FileFinder
+from src.file_finder import FileFinder
 
 
 class Selector: 
@@ -61,9 +60,9 @@ class Selector:
         sum = 0
         for key, val in searchterms.items():
             sum+=val
-            if sum>=selected_id:
+            if sum>selected_id:
                 return FileFinder.search_images_in_folder(self.folder_masks, key)[0]
         return None
 if __name__ == "__main__":
     sel = Selector()
-    sel.select_video()
+    print(sel.select_video())
