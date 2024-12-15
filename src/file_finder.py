@@ -1,13 +1,15 @@
 import os
 
+
 from src.file_util import FileTypeChecker, get_filename_notype
+
 
 
 class FileFinder:        
     def search_files_in_folder(folder_path:str, searchterm:str="")->list[str]:
         """
         Searches for files containing searchterm.
-        If no searchterm is given, it returns all file paths
+        If no searchterm is given, it returns all file paths.
         
         Args:
             folder_path (str): path of folder with files
@@ -31,6 +33,16 @@ class FileFinder:
         return found_file_paths
         
     def search_images_in_folder(folder_path:str, searchterm:str="")->list[str]:
+        """
+        Searches all images in a folder.
+
+        Args:
+            folder_path (str): path of folder
+            searchterm (str, optional): searchterm for more specific search. Defaults to "".
+
+        Returns:
+            list[str]: list of image paths
+        """
         paths = FileFinder.search_files_in_folder(folder_path, searchterm)
         found_image_paths = []
         for path in paths:
@@ -39,6 +51,16 @@ class FileFinder:
         return found_image_paths
     
     def search_videos_in_folder(folder_path:str, searchterm:str="")->list[str]:
+        """
+        Searches all videos in a folder.
+
+        Args:
+            folder_path (str): path of folder
+            searchterm (str, optional): searchterm for more specific search. Defaults to "".
+
+        Returns:
+            list[str]: list of video paths
+        """
         paths = FileFinder.search_files_in_folder(folder_path, searchterm)
         found_video_paths = []
         for path in paths:
@@ -48,6 +70,9 @@ class FileFinder:
     
 
 if __name__ == "__main__":
+    """
+    Test of functions
+    """
     file = R"src\file_finder.py"
     name = get_filename_notype(file)
     print(name)
