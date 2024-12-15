@@ -3,23 +3,7 @@ import ntpath
 import cv2
 import numpy as np
 
-class FileFinder:    
-    def get_filename_notype(file_path:str)->str:
-        """
-        Return name of file without the type/ending.
-
-        Args:
-            file_path (str): path of file
-
-        Returns:
-            str: file name
-        """
-        basename = ntpath.basename(file_path)
-        reversed_basename = basename[::-1]
-        _, reversed_filename = reversed_basename.split('.', 1)
-        filename = reversed_filename[::-1]
-        return filename
-    
+class FileFinder:        
     def search_files_in_folder(folder_path:str, searchterm:str="")->list[str]:
         """
         Searches for files containing searchterm.
@@ -98,7 +82,23 @@ class FileTypeChecker:
         except:
             return False
         
-        
+def get_filename_notype(file_path:str)->str:
+        """
+        Return name of file without the type/ending.
+
+        Args:
+            file_path (str): path of file
+
+        Returns:
+            str: file name
+        """
+        basename = ntpath.basename(file_path)
+        reversed_basename = basename[::-1]
+        _, reversed_filename = reversed_basename.split('.', 1)
+        filename = reversed_filename[::-1]
+        return filename
+    
+
 if __name__ == "__main__":
     file = R"F:\.DEV\_Programming\_GitHub\BIDV2_ParkingSpaceDetection\parkingSpace\tests\test_videostream.py"
     mf = FileFinder

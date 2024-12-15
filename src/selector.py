@@ -1,4 +1,4 @@
-from src.file_finder import FileFinder
+from src.file_finder import FileFinder, get_filename_notype
 
 
 class Selector: 
@@ -29,7 +29,7 @@ class Selector:
        
         print(f"Select one of the following videos with a number:")
         for i, video in enumerate(paths_videos):
-            name = FileFinder.get_filename_notype(video)
+            name = get_filename_notype(video)
             print(f"\t{i}.) {name}")
         selected_id = input("Enter video number: ")
         try: 
@@ -52,7 +52,7 @@ class Selector:
         search_terms = []
         remove_string = "mask_"
         for path in paths_masks:
-            name = FileFinder.get_filename_notype(path)
+            name = get_filename_notype(path)
             search_terms.append(name.replace(remove_string,""))
         return search_terms
     

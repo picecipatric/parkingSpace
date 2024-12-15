@@ -1,21 +1,23 @@
 import cv2
 import time
 
+
 class ParkingTime:
     def __init__(self):
         self.time_current_parked_delta = 0.0
         self.datetimes_parked_started = []
         self.datetimes_parked_ended = []
-        self._is_parked = False
-      
+        self.is_parked = False
+    
+    
     def update_parking_spot(self, is_empty:bool) -> None:
         # vehicle left
         if is_empty:
-            if self._is_parked:
+            if self.is_parked:
                 self._update_vehicle_left()
         # vehicle arrived
         if not is_empty:
-            if not self._is_parked:
+            if not self.is_parked:
                 self._update_vehicle_arrived()
         # vehicle parked
         self._update_vehicle_parked()
@@ -39,14 +41,14 @@ class ParkingTime:
         delta_time = self.datetimes_parked_started[-1] - self.datetimes_parked_ended[-1]
         # self.times_parked_delta.append(delta_time)
         self.time_current_parked_delta = 0.0
-        self._is_parked = False
+        self.is_parked = False
         
     def _update_vehicle_arrived(self):
         self.datetimes_parked_started.append(time.time())
-        self._is_parked = True
+        self.is_parked = True
     
     def _update_vehicle_parked(self):
-        if not self._is_parked:
+        if not self.is_parked:
             return
         self.time_current_parked_delta = time.time() - self.datetimes_parked_started[-1]
 

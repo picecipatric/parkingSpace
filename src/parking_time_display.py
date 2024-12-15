@@ -1,6 +1,6 @@
 import cv2
 
-from src.parking_time_measurement import ParkingTime
+from src.time_measurement import ParkingTime
 from src.parking_spot_parameters import ParkingSpotParameters
 
 class ParkingTimeDisplay:
