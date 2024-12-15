@@ -5,6 +5,7 @@ import numpy as np
 
 # sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 from src.selector import Selector
+from src.file_opener import FileOpener as fo
 from src.util import get_parking_lines, availability
 
 
@@ -12,12 +13,10 @@ if __name__ == "__main__":
     
     # Load image and video
     select = Selector()
-    mask, video_path = select.select_video()
+    mask_path, video_path = select.select_video()
     
-    
-    mask = cv2.imread(mask, 0)
-    
-    video = cv2.VideoCapture(video_path)
+    mask = fo.open_as_mask(mask_path)
+    video = fo.open_as_video(video_path)
     # video = rescale_video(video, scale_percent=80)
     
     connected_lines = cv2.connectedComponentsWithStats(mask, 4, cv2.CV_32S)
