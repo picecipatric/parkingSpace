@@ -9,5 +9,11 @@ Python version: 3.12.XX
 3. Canny Edge Detection [[here](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_canny/py_canny.html?highlight=canny)]
 4. Houghes Line Transform [[here](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html)]
 
+# Installation
+create packages of project
+pip install -e . 
+and 
+pip install -r requirements.txt
+
 # Credits 
 Authors:
