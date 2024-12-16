@@ -9,7 +9,7 @@ class Selector:
     def __init__(self):
         self.folder_masks = "masks"
         self.folder_videos = "videos"
-        self.duration_parking = 15.
+        self.duration_parking = 15
         self.is_duration_limited = 0>self.duration_parking
     
       

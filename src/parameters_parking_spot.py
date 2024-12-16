@@ -3,8 +3,8 @@ from numpy import ndarray
 from dataclasses import dataclass
 
 
-from time_measurement_parking_spot import ParkingTime
-from geometry_parking_spot import get_parking_spot_geometry, ParkingGeometry
+from src.time_measurement_parking_spot import ParkingTime
+from src.geometry_parking_spot import get_parking_spot_geometry, ParkingGeometry
 
 
 

@@ -1,7 +1,7 @@
 import cv2
 
 
-from parameters_parking_spot import ParkingSpot
+from src.parameters_parking_spot import ParkingSpot
 
 
 
