@@ -42,9 +42,12 @@ def main():
     if not mask_name in MIN_COUNT_DICT.keys():
         mask_name = "DEFAULT"
     
+    video_file_name = f'Video (orange is overdue)'
+    
     frame_number = 0
     at_frame = FPS 
     ret = True
+    
     
     # Setup parking pots and detection
     parking_spots = setup_parking_spots(mask_image=mask)
@@ -83,9 +86,8 @@ def main():
 
         # cv2.imshow('dilated', rescale_image(frame_dilated,
         #                                     RESIZE_SCALE[mask_name]))
-        cv2.imshow('frame (orange: overdue)', rescale_image(frame,
-                                          RESIZE_SCALE[mask_name]))
-        
+        cv2.imshow(video_file_name, rescale_image(frame,
+                                                  RESIZE_SCALE[mask_name]))
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         frame_number = frame_number + 1
@@ -96,7 +98,6 @@ def main():
     for spot in parking_spots:
         print(spot.lable_id, 
               spot.time.time_delta)
-    
     video.release()
     cv2.destroyAllWindows()
     
