@@ -32,7 +32,7 @@ class Selector:
         print()
         if not paths_videos:
             print("No matching video found...")
-            return None
+            return [None, None]
        
         print(f"Select one of the following videos with a number:")
         for i, video in enumerate(paths_videos):
@@ -47,7 +47,7 @@ class Selector:
                 raise
         except:
             print("ERROR: invalid input...")
-            return None
+            return [None, None]
         
         mask_path = self._find_matching_mask(selected_id, searchterms)
         video_path = paths_videos[selected_id]

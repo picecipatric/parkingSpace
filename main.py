@@ -1,4 +1,5 @@
 import cv2
+import sys
 
 
 
@@ -9,7 +10,7 @@ from src.file_finder import get_filename_notype
 from src.parameters_parking_spot import setup_parking_spots
 import src.drawer_parking_spot as draw
 from src.image_util import rescale_image, dilate_frame
-from src.fps_stabilizer import FpsStabalizer
+from src.fps_stabilizer import FpsStabilizer
 
 
 FPS = 30
@@ -29,6 +30,8 @@ def main():
     # select
     sel = Selector()
     mask_path, video_path = sel.select_video()
+    if mask_path == None:
+        sys.exit()
     is_duration_limited, duration_parking = sel.select_duration_parking()
     
     # Load image and video
@@ -47,7 +50,7 @@ def main():
     parking_spots = setup_parking_spots(mask_image=mask)
     
     # Setup video stablizer
-    vid_stabeilizer = FpsStabalizer(FPS)
+    vid_stabeilizer = FpsStabilizer(FPS)
     vid_stabeilizer.setup_stable_fps()
     
     while ret:
